@@ -101,6 +101,7 @@ interface PullRequestStrategyArgs {
   changelogSections?: ChangelogSection[];
   changelogPath?: string;
   changelogHost?: string;
+  skipChangelog?: boolean;
   versioningStrategy?: VersioningStrategyType;
 
   // for Ruby: TODO refactor to find version.rb like Python finds version.py
@@ -156,7 +157,7 @@ function gitHubOptions(yargs: yargs.Argv): yargs.Argv {
   return yargs
     .option('token', {describe: 'GitHub token with repo write permissions'})
     .option('api-url', {
-      describe: 'URL to use when making API requests',
+      describe: 'URL to use when making API requests!!!!!!',
       default: GH_API_URL,
       type: 'string',
     })
@@ -304,6 +305,11 @@ function pullRequestStrategyOptions(yargs: yargs.Argv): yargs.Argv {
       describe: 'where can the CHANGELOG be found in the project?',
       type: 'string',
     })
+    .option('skip-changelog', {
+      default: false,
+      describe: 'skip the changelog for this project',
+      type: 'boolean',
+    })
     .option('changelog-type', {
       describe: 'type of changelog to build',
       choices: getChangelogTypes(),
@@ -450,6 +456,7 @@ const createReleasePullRequestCommand: yargs.CommandModule<
           changelogPath: argv.changelogPath,
           changelogType: argv.changelogType,
           changelogHost: argv.changelogHost,
+          skipChangelog: argv.skipChangelog,
           pullRequestTitlePattern: argv.pullRequestTitlePattern,
           pullRequestHeader: argv.pullRequestHeader,
           changelogSections: argv.changelogSections,
@@ -713,6 +720,7 @@ const bootstrapCommand: yargs.CommandModule<{}, BootstrapArgs> = {
       bumpPatchForMinorPreMajor: argv.bumpPatchForMinorPreMajor,
       changelogPath: argv.changelogPath,
       changelogHost: argv.changelogHost,
+      skipChangelog: argv.skipChangelog,
       changelogSections: argv.changelogSections,
       releaseAs: argv.releaseAs,
       versioning: argv.versioningStrategy,

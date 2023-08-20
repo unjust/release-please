@@ -51,16 +51,17 @@ export class Node extends BaseStrategy {
         packageName,
       }),
     });
-
-    updates.push({
-      path: this.addPath(this.changelogPath),
-      createIfMissing: true,
-      updater: new Changelog({
-        version,
-        changelogEntry: options.changelogEntry,
-      }),
-    });
-
+    console.log('*********', options.skipChangelog);
+    if (!options.skipChangelog) {
+      updates.push({
+        path: this.addPath(this.changelogPath),
+        createIfMissing: true,
+        updater: new Changelog({
+          version,
+          changelogEntry: options.changelogEntry,
+        }),
+      });
+    }
     updates.push({
       path: this.addPath('package.json'),
       createIfMissing: false,

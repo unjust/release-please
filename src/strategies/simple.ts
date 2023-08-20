@@ -31,15 +31,16 @@ export class Simple extends BaseStrategy {
     const updates: Update[] = [];
     const version = options.newVersion;
 
-    updates.push({
-      path: this.addPath(this.changelogPath),
-      createIfMissing: true,
-      updater: new Changelog({
-        version,
-        changelogEntry: options.changelogEntry,
-      }),
-    });
-
+    if (!options.skipChangelog) {
+      updates.push({
+        path: this.addPath(this.changelogPath),
+        createIfMissing: true,
+        updater: new Changelog({
+          version,
+          changelogEntry: options.changelogEntry,
+        }),
+      });
+    } 
     updates.push({
       path: this.addPath(this.versionFile),
       createIfMissing: false,

@@ -119,6 +119,7 @@ export interface ReleaserConfig {
   changelogPath?: string;
   changelogType?: ChangelogNotesType;
   changelogHost?: string;
+  skipChangelog?: boolean;
 
   // Ruby-only
   versionFile?: string;

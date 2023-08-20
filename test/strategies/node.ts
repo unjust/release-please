@@ -18,6 +18,7 @@ import {
   buildMockConventionalCommit,
   buildGitHubFileContent,
   assertHasUpdate,
+  assertNoHasUpdate,
 } from '../helpers';
 import * as nock from 'nock';
 import * as sinon from 'sinon';
@@ -245,5 +246,22 @@ describe('Node', () => {
       expect(updater.packageName).to.equal('google-cloud-automl-pkg');
       assertHasUpdate(updates, 'package.json', PackageJson);
     });
+  });
+  it('skips changelog update when options skipChangelog is true', async () => {
+    const strategy = new Node({
+      skipChangelog: true,
+      targetBranch: 'main',
+      github,
+      component: 'google-cloud-automl',
+      packageName: 'google-cloud-automl-pkg',
+    });
+    sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+    const latestRelease = undefined;
+    const release = await strategy.buildReleasePullRequest(
+      commits,
+      latestRelease
+    );
+    const updates = release!.updates;
+    assertNoHasUpdate(updates, 'CHANGELOG.md');
   });
 });
